@@ -1,0 +1,7 @@
+
+
+
+
+
+0001	High_blood_pressure_stage_2		Extreme_obesity	Normal
+0004	High_blood_pressure_stage_2		Normal	Diabetes
