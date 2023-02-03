@@ -9,6 +9,7 @@ void getMedicalData(char *referenceNo)
 {
     float weight;
     float height;
+    int age;
     float rbs;
     int BPU;
     int BPL;
@@ -20,6 +21,8 @@ void getMedicalData(char *referenceNo)
     scanf("%f", &weight);
     printf("Enter the height in cm:");
     scanf("%f", &height);
+    printf("Enter your age:");
+    scanf("%d", &age);
     printf("Enter your random blood sugar level: ");
     scanf("%f", &rbs);
     printf("Enter your upper blood pressure: ");
@@ -31,6 +34,7 @@ void getMedicalData(char *referenceNo)
     printf("Do you use liquor, smoke, tobacco or areca nut(Y/N)? ");
     scanf("%s", &is_alcoholic);
     float bmi = weight / ((height / 100) * (height / 100));
+    float calories = 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age);
     // Determine BMI state
     if (bmi < 18.5)
     {
@@ -126,66 +130,17 @@ void getMedicalData(char *referenceNo)
     if (found == 0)
     {
         // if the reference number was not found, append the new data to the file
-        fprintf(report, "\n%s\t%s\t\t%s\t%s", referenceNo, bp_state, bmi_state, bsl_state);
+        fprintf(report, "\n%s\t%s\t\t%s\t\t%s\t\t%.2f", referenceNo, bp_state, bmi_state, bsl_state, calories);
     }
     else
     {
         // otherwise, write the new data for the reference number
-        fprintf(report, "\n%s\t%s\t\t%s\t%s", referenceNo, bp_state, bmi_state, bsl_state);
+        fprintf(report, "\n%s\t%s\t\t%s\t\t%s\t\t%.2f", referenceNo, bp_state, bmi_state, bsl_state, calories);
     }
     fclose(report);
     printf("\n");
     exitMenu();
 }
-
-// void addNewUser()
-// {
-//     char name[30];
-//     char dob[12];
-//     int age;
-//     char gender[10];
-//     char address[50];
-//     printf("\033c");
-//     printf("Please enter following details without any space.\n");
-//     printf("Enter your name: ");
-//     scanf("%s", name);
-//     printf("Enter your date of birth(dd/mm/yyyy): ");
-//     scanf("%s", dob);
-//     printf("Enter your age: ");
-//     scanf("%d", &age);
-//     printf("Enter your gender(M/F): ");
-//     scanf(" %c", gender);
-//     printf("Enter your address: ");
-//     scanf("%s", address);
-
-//     int refLast = 0;
-//     char temp[15];
-//     int flag = 0;
-//     FILE *users = fopen("users.txt", "a+");
-//     if (!users)
-//     {
-//         printf("Error opening file!\n");
-//         exit(1);
-//     }
-
-//     while (fgets(temp, sizeof(temp), users) != NULL)
-//     {
-//         refLast = atoi(temp);
-//         flag = 1;
-//     }
-
-//     if (flag == 0)
-//     {
-//         refLast = 9999;
-//     }
-//     refLast++;
-
-//     char ref_str[5];
-//     sprintf(ref_str, "%04d", refLast);
-
-//     fprintf(users, "\n%s\t\t%s\t\t%s\t\t%d\t\t%s\t\t%s", ref_str, name, dob, age, gender, address);
-//     fclose(users);
-// }
 
 // User handling
 int validation()
@@ -210,11 +165,11 @@ int validation()
         {
             if (strcmp(readVal, enteredRefNo) == 0)
             {
-                printf("\033c");
+                system("cls");
                 return 1;
             }
         }
-        printf("we couldn't find your reference number");
+        printf("we couldn't find your reference number\n");
         exit(0);
         break;
     case 2:
@@ -225,10 +180,15 @@ int validation()
         int age;
         while (result != 0)
         {
-            printf("\033c");
+            system("cls");
             printf("Please enter the following details without using any space. You can use '_' character represent the space.\n\n");
             printf("Please enter your name: ");
-            scanf("%s", &name);
+            fgets(name, sizeof(name), stdin);
+            int len = strlen(name);
+            if (name[len - 1] == '\n')
+            {
+                name[len - 1] = '\0';
+            }
             printf("Please enter your Date of birth(MM/DD/YYYY): ");
             scanf("%s", &dob);
             printf("Please enter your age: ");
@@ -260,20 +220,24 @@ int validation()
         }
         int refLast = atoi(lastRef);
         refLast = refLast + 1;
+
         if (users != NULL)
         {
             fprintf(users, "\n%04d\t\t%s\t\t%s\t\t%d\t\t%s\t\t%s", refLast, name, dob, age, gender, address);
             fflush(users);
             fclose(users);
         }
+        printf("\nNew user created successfully.\n");
+        printf("Your reference number is: %04d. Please use this to access the system later.\n", refLast);
         char refString[10];
         sprintf(refString, "%04d", refLast);
-        printf("\nPlease enter your medical data.\n");
+        printf("\nPlease enter your medical data to continue.\n\n");
         getMedicalData(refString);
         return 1;
         break;
     default:
-        printf("Invalid input");
+        printf("Invalid input\nProgram existing...");
+        exit(0);
         break;
     }
 }
@@ -283,7 +247,7 @@ void updateMedicalData()
     char ref[10];
     printf("Please enter your reference number again: ");
     scanf("%s", &ref);
-    printf("\033c");
+    system("cls");
     printf("Please enter following details.\n");
     FILE *users = fopen("users.txt", "a+");
     char val[10];
@@ -310,14 +274,14 @@ void seeReport()
     }
 
     char line[256];
-    char tRe[256], name[256], dob[256], age[256], gender[10], pressure[256], bmi[256];
+    char tRe[256], name[256], dob[256], age[256], gender[10], pressure[256], bmi[256], blood_sugar[256];
     int found = 0;
     while (fgets(line, sizeof(line), report))
     {
         if (strstr(line, referenceNo))
         {
             found = 1;
-            sscanf(line, "%s\t%s\t%s", tRe, pressure, bmi);
+            sscanf(line, "%s\t%s\t%s\t%s", tRe, pressure, bmi, blood_sugar);
             while (fgets(line, sizeof(line), users))
             {
                 if (strstr(line, referenceNo))
@@ -333,8 +297,7 @@ void seeReport()
             printf("Gender:\t\t%s\n", gender);
             printf("___________________________________________________________\n");
             printf(" \n");
-            printf("BMI: %s\tBlood pressure: %s\n", bmi, pressure);
-            break;
+            printf("BMI: %s\tBlood pressure: %s\tBlood sugar level: %s\n", bmi, pressure, blood_sugar);
         }
     }
     if (found == 0)
@@ -343,6 +306,8 @@ void seeReport()
     }
     fclose(report);
     fclose(users);
+    printf("\n");
+    exitMenu();
 }
 void generateUniqueNumbers(int randomIndex[], int size)
 {
@@ -396,7 +361,7 @@ void displayWorkout()
     printf("Please enter your reference number again: ");
     scanf("%s", referenceNo);
     int randomIndex[4];
-    printf("\033c");
+    system("cls");
     generateUniqueNumbers(randomIndex, 4);
     FILE *report = fopen("report.txt", "r");
     if (report == NULL)
@@ -437,6 +402,7 @@ void displayWorkout()
             }
         }
     }
+    printf("\n");
     fclose(report);
     exitMenu();
 }
@@ -446,7 +412,7 @@ void displayDietPlan()
     char referenceNo[10];
     printf("Please enter your reference number again: ");
     scanf("%s", referenceNo);
-    printf("\033c");
+    system("cls");
     int randomIndex[4];
     generateUniqueNumbers(randomIndex, 4);
     FILE *report = fopen("report.txt", "r");
@@ -489,23 +455,62 @@ void displayDietPlan()
             {
                 printf("Your overall health is good. You do not need any specific diet plan. Take a balanced diet to continue a healthier lifestyle. \n");
             }
-            printf("\n");
         }
     }
     fclose(report);
+    printf("\n");
+    exitMenu();
+}
+
+void countCalorieIntake()
+{
+    FILE *calorieFile;
+    int calories, total = 0;
+    char answer;
+    FILE *report = fopen("report.txt", "r");
+    calorieFile = fopen("calories.txt", "a");
+    if (calorieFile == NULL)
+    {
+        printf("Error opening file\n");
+    }
+    if (report == NULL)
+    {
+        printf("Error opening file!\n");
+    }
+
+    char line[256], tRe[256], pressure[256], bmi[256], blood_sugar[256], calarie_count[256];
+    while (fgets(line, sizeof(line), report))
+    {
+        sscanf(line, "%s\t%s\t%s\t%s\t%s", tRe, pressure, bmi, blood_sugar, calarie_count);
+    }
+    printf("Please enter calories you have taken one by one.");
+
+    do
+    {
+        printf("Enter calories consumed: ");
+        scanf("%d", &calories);
+        fprintf(calorieFile, "%d\n", calories);
+        total += calories;
+
+        printf("Do you want to enter more calories? (Y/N): ");
+        scanf(" %c", &answer);
+    } while (answer == 'y' || answer == 'Y');
+
+    fclose(calorieFile);
+
+    printf("\nWithin today you have consumed: %s calories.\n", total);
+    printf("If you are planning to have your current weight for the future you need to consume %s\n\n", calarie_count);
     exitMenu();
 }
 
 int mainMenu()
 {
     int selectedOption;
-    printf("1 - Update medical details\n");
-    printf("2 - See report\n");
-    printf("3 - Your workout plan\n");
-    printf("4 - Your diet plan\n\n");
-    printf("Please enter your choice from 1 to 4: ");
+    printf("1 - Update medical details\n2 - See report\n3 - Your workout plan\n4 - Your diet plan\n5 - Calorie counter\n");
+    printf("Enter any other key to exit\n");
+    printf("\nPlease enter your choice from 1 to 5: ");
     scanf("%d", &selectedOption);
-    printf("\033c");
+    system("cls");
     switch (selectedOption)
     {
     case 1:
@@ -520,8 +525,12 @@ int mainMenu()
     case 4:
         displayDietPlan();
         break;
-    default:
+    case 5:
+        countCalorieIntake();
         break;
+    default:
+        printf("Existing...");
+        exit(0);
     }
     return selectedOption;
 }
@@ -533,7 +542,7 @@ int exitMenu()
     printf("2 - Exit\n");
     printf("Please enter your choice from 1 or 2: ");
     scanf("%d", &selectedOption);
-    printf("\033c");
+    system("cls");
     switch (selectedOption)
     {
     case 1:
@@ -552,7 +561,8 @@ int exitMenu()
 void main()
 {
     printf("\n\t\t##############################################\n");
-    printf("\t\t\tSelf care program to prevent NCD \n");
+    printf("\n\t\t\t\tHealthMate\n");
+    printf("\t\t\tUnleash the power of self-care \n\n");
     printf("\t\t##############################################\n");
     printf("\n");
     validation();
