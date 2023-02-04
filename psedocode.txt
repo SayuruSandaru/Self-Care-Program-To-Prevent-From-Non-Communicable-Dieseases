@@ -1,0 +1,150 @@
+function "validation()":
+  Declare integer variable "selectedItem"
+  Open the file "users.txt" in append mode
+  Display "Please login or register to continue."
+  Display "1-Login" and "2-Register"
+  Prompt user to enter the selection
+  Read the value of "selectedItem"
+  Use a switch statement to handle the value of "selectedItem":
+    Case 1 (Login):
+      Declare character array "enteredRefNo"
+      Display "Welcome back"
+      Prompt user to enter the reference number
+      Read the value of "enteredRefNo"
+      Declare character array "readVal"
+      Read the values from file "users.txt" and store it in "readVal"
+      If "readVal" matches with "enteredRefNo": 
+        return 1
+      Else:
+        display "we couldn't find your reference number" 
+        exit the program
+    Case 2 (Register):
+      Declare character array "isRegistrationDataCorrect" and initialize it to "N"
+      Declare character array "yes" and initialize it to "Y"
+      Declare integer variable "result" and initialize it to 1
+      Declare character arrays "name", "dob", "address", "gender"
+      Declare integer variable "age"
+      Use a while loop:
+        Clear the screen
+        Prompt user to enter the name and store it in "name"
+        Remove the newline character from "name"
+        Get date of birth and store it in "dob"
+        Get age and store it in "age"
+        Get address and store it in "address"
+        Get gender and store it in "gender"
+        Display the entered values
+        Prompt user to confirm the entered data
+        Read the value of "isRegistrationDataCorrect"
+        Convert the first character of "isRegistrationDataCorrect" to uppercase
+        Check if "isRegistrationDataCorrect" matches with "yes"
+        If yes, set "result" to 0, else, repeat the loop
+      Declare character array "lastRef"
+      Read the values from file "users.txt" and store the last reference number in "lastRef"
+      Convert "lastRef" to integer and increment it by 1
+      If file "users.txt" is not NULL:
+        append the new user data with the incremented reference number
+      Display "New user created successfully." and the reference number
+      Call the function "getMedicalData()" with the reference number as the argument
+      Return 1
+    Default case:
+      Display "Invalid input" and "Program existing..."
+      Exit the program
+  End of function
+
+
+function getMedicalData(referenceNo)
+  Declare float variable "weight"
+  Declare a floating-point variable named "height".
+  Declare an integer variable named "age".
+  Declare a floating-point variable named "rbs".
+  Declare an integer variable named "BPU".
+  Declare an integer variable named "BPL".
+  Declare a character variable named "NCD".
+  Declare a character variable named "is_alcoholic".
+  Declare a character pointer variable named "bmi_state".
+  Declare a character pointer variable named "bp_state".
+  output "Enter the weight in Kg: "
+  input weight
+  output "Enter the height in cm:"
+  input height
+  output "Enter your age:"
+  input age
+  output "Enter your random blood sugar level: "
+  input rbs
+  output "Enter your upper blood pressure: "
+  input BPU
+  output "Enter your lower blood pressure level: "
+  input BPL
+  output "Is anyone of your family member suffer from cancer, diabetes, cholesterol(Y/N)? "
+  input NCD
+  output "Do you use liquor, smoke, tobacco or areca nut(Y/N)? "
+  input is_alcoholic
+  float bmi = weight / ((height / 100) * (height / 100))
+  float calories = 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)
+  if bmi < 18.5:
+    bmi_state = "Underweight"
+  else if bmi < 24.9:
+    bmi_state = "Normal"
+  else if bmi < 29.9:
+    bmi_state = "Obesity_class_1"
+  else if bmi < 34.9:
+    bmi_state = "Obesity_class_2"
+  else
+    bmi_state = "Extreme_obesity"
+  if BPU <= 120 && BPL <= 80:
+    bp_state = "Normal"
+  else if BPU <= 129 && BPL <= 80:
+    bp_state = "Elevated"
+  else if BPU <= 139 && BPL < 89:
+    bp_state = "High_blood_pressure_stage_1"
+  else if BPU >= 140 || BPL >= 90:
+    bp_state = "High_blood_pressure_stage_2"
+  else:
+    bp_state = "Hypertensive_crisis"
+  Declare a character pointer variable named "bsl_state".
+  if rbs <= 99:
+    bsl_state = "Normal"
+  else if rbs <= 125:
+    bsl_state = "Prediabetes"
+  else:
+    bsl_state = "Diabetes"
+  Open the file "report.txt" in read mode as report
+  if report == NULL:
+    output "Error opening file!"
+    return
+  output "Above data will be stored. You can view and update them later."
+  Declare an array of 4096 characters named "buffer".
+  Set all elements of the "buffer" array to the null character.
+  Declare an array of 256 characters named "line".
+  Declare an integer variable named "found" and initialize it to 0.
+  Repeat the following until the end of the file is reached:
+    Read a line from the file "report" and store it in the "line" array.
+    If the string "referenceNo" is found in the "line" array:
+      Set the value of "found" to 1.
+      Skip to the next iteration of the loop.
+    Concatenate(use strcat() function) the contents of the "line" array to the end of the "buffer" array.
+  Close the file "report".
+  Open the file "report.txt" in write mode and store the file pointer in "report".
+  If the file pointer "report" == `NULL`:
+    output "Error opening file!" and return.
+  Write the contents of the "buffer" array to the file "report" using `fprintf`.
+  If the value of "found" == 0:
+    add a new line to the file "report" that includes the reference number, "bp_state", "bmi_state", "bsl_state", and "calories".
+  Else:
+    overwrite the line in the file "report" that contains the reference number with the new data.
+  Close the file "report".
+  Call the function "exitMenu".
+  End of function
+
+
+function "updateMedicalData()":
+  Declare a char array "ref" of size 10.
+  Output "Please enter your reference number again: "
+  Get user input and store it in the "ref" array.
+  Clear the screen.
+  Output a prompt asking the user to enter their medical data.
+  Open the file "users.txt" in "append and read" mode and store the file pointer in "users".
+  Declare a char array "val" of size 10.
+  While reading a string from the file "users" and storing it in the "val" array returns == 1:
+    If the value of the comparison of "val" and "ref" using `strcmp` is equal to 0:
+        call the function "getMedicalData" with "ref" array as an argument.

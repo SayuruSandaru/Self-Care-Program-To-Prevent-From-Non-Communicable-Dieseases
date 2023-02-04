@@ -4,3 +4,4 @@
 
 0001	High_blood_pressure_stage_2		Obesity_class_1		Normal		2019.56
 0002	High_blood_pressure_stage_2		Normal		Normal		1910.36
+0003	High_blood_pressure_stage_2		Extreme_obesity		Normal		1200.86

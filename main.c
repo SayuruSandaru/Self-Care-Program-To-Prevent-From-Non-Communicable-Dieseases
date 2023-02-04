@@ -183,12 +183,7 @@ int validation()
             system("cls");
             printf("Please enter the following details without using any space. You can use '_' character represent the space.\n\n");
             printf("Please enter your name: ");
-            fgets(name, sizeof(name), stdin);
-            int len = strlen(name);
-            if (name[len - 1] == '\n')
-            {
-                name[len - 1] = '\0';
-            }
+            scanf("%s", name);
             printf("Please enter your Date of birth(MM/DD/YYYY): ");
             scanf("%s", &dob);
             printf("Please enter your age: ");
