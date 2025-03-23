@@ -41,16 +41,16 @@
 ## 🖼️ Screenshots
 
 ### 🔹 1. User Registration
-![Screenshot 1 – User Registration](./screenshots/Screenshot1.png)
+![Screenshot 2025-03-23 085408](https://github.com/user-attachments/assets/3f6a6dc7-974c-4e0a-b3ac-3b5a6eeb44d5)
 
 ### 🔹 2. Medical Data Input
-![Screenshot 2 – Medical Input](./screenshots/Screenshot2.png)
+![Screenshot 2025-03-23 085506](https://github.com/user-attachments/assets/ba7c7e1a-e0c4-457c-9d32-6cc916313258)
 
 ### 🔹 3. Health Status Summary
-![Screenshot 3 – Health Status](./screenshots/Screenshot3.png)
+![Screenshot 2025-03-23 085555](https://github.com/user-attachments/assets/43d973e6-f586-4dc5-aac4-84e930ee3c7a)
 
 ### 🔹 4. Diet Plan Suggestions
-![Screenshot 4 – Diet Plan](./screenshots/Screenshot4.png)
+![Screenshot 2025-03-23 085630](https://github.com/user-attachments/assets/0bd3237a-c5e1-4273-be6f-708984463df0)
 
 > _Screenshots captured from a real program run in the Code::Blocks terminal._
 
@@ -75,13 +75,3 @@
 ### ✅ Option 2: Using the `main.exe` File
 1. Navigate to the compiled `main.exe` file.
 2. Double-click to run.
-
----
-
-## 👤 Author
-
-**Saman**  
-Academic group project 2023: 
-Developed using C and Code::Blocks
-
----
